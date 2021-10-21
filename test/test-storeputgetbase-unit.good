@@ -1,0 +1,10 @@
+####COMMAND Unit tests.
+####CODE 0
+####OUT
+ok: StorePutGet: Table name ok
+ok: StorePutGet: Field name ok
+ok: StorePutGet: Missing field in item raises
+ok: StorePutGet: Field present
+ok: StorePutGet: Missing id raises
+ok: StorePutGet: Id present
+####ERR

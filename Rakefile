@@ -18,7 +18,12 @@ task install: [:gem] do
 end
 
 desc 'Test.'
-task test: %i[dynamodb]
+task test: %i[storeputget dynamodb]
+
+desc 'Test StorePutGet class'
+task :storeputget do
+  sh './runtest.sh storeputgetbase'
+end
 
 desc 'Test DynamoDB'
 task :dynamodb do
