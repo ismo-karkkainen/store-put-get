@@ -27,6 +27,5 @@ end
 
 desc 'Test DynamoDB'
 task :dynamodb do
-  
+  #sh './runtest.sh dynamodb'
 end
-

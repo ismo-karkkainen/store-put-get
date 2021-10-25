@@ -9,7 +9,7 @@ $unit_test = 0
 require_relative '../lib/storeputgetbase.rb'
 
 $context = 'StorePutGet'
-spg = StorePutGet.new('table', 'field')
+spg = StorePutGetBase.new('table', 'field')
 assert(spg.table, 'table', 'Table name ok')
 assert(spg.field, 'field', 'Field name ok')
 begin
@@ -32,6 +32,18 @@ rescue ArgumentError
 end
 begin
   spg.get('value')
+  assert(true, true, 'Id present')
+rescue ArgumentError
+  assert(true, false, 'Id present')
+end
+begin
+  spg.delete()
+  assert(true, false, 'Missing id raises')
+rescue ArgumentError
+  assert(true, true, 'Missing id raises')
+end
+begin
+  spg.delete('value')
   assert(true, true, 'Id present')
 rescue ArgumentError
   assert(true, false, 'Id present')

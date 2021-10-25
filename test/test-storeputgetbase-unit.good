@@ -7,4 +7,6 @@ ok: StorePutGet: Missing field in item raises
 ok: StorePutGet: Field present
 ok: StorePutGet: Missing id raises
 ok: StorePutGet: Id present
+ok: StorePutGet: Missing id raises
+ok: StorePutGet: Id present
 ####ERR

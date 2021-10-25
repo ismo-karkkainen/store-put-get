@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+# Copyright 2021 Ismo Kärkkäinen
+# Licensed under Universal Permissive License. See LICENSE.txt.
+
+require './unittest.rb'
+
+$unit_test = 0
+require_relative '../lib/dynamodb.rb'
+
+$context = 'StorePutGet'
+d = StorePutGet::DynamoDb.new('test', 'prim', { endpoint: 'http://192.168.99.100:8000' })
+assert(d.table, 'test', 'Table name ok')
+assert(d.field, 'prim', 'Field name ok')
+
+exit $unit_test

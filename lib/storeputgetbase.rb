@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StorePutGet
+class StorePutGetBase
   attr_reader :table, :field
 
   def initialize(table_name, field_name)
@@ -13,6 +13,10 @@ class StorePutGet
   end
 
   def get(id)
-    raise ArgumentError, "No id." if id.nil?
+    raise ArgumentError, 'No id.' if id.nil?
+  end
+
+  def delete(id)
+    raise ArgumentError, 'No id.' if id.nil?
   end
 end
