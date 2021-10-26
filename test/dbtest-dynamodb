@@ -5,12 +5,52 @@
 
 require './unittest.rb'
 
+addr = ARGV.first
+
 $unit_test = 0
 require_relative '../lib/dynamodb.rb'
 
-$context = 'StorePutGet'
-d = StorePutGet::DynamoDb.new('test', 'prim', { endpoint: 'http://192.168.99.100:8000' })
+$context = 'Primary'
+d = StorePutGet::DynamoDb.new('test', 'prim', { :endpoint => addr })
 assert(d.table, 'test', 'Table name ok')
 assert(d.field, 'prim', 'Field name ok')
+item = {
+  'prim' => 'prival',
+  'other' => 'value'
+}
+d.put(item)
+r = d.get(item['prim'])
+assert(r['prim'], item['prim'], 'Got correct by primary')
+d.delete(item['prim'])
+r = d.get(item['prim'])
+assert(r.nil?, true, 'Deleted item query returns nil')
+
+$context = 'Secondary'
+item = {
+  'prim' => 'prival2',
+  'sec' => 'secval',
+  'other' => 'value2'
+}
+d = StorePutGet::DynamoDb.new('test', 'sec', { endpoint: addr })
+d.put(item)
+r = d.get(item['sec'])
+assert(r['sec'], item['sec'], 'Got correct by secondary')
+d.delete(item['sec'])
+r = d.get(item['sec'])
+assert(r.nil?, true, 'Deleted item query returns nil')
+
+#$context = 'Local'
+#item = {
+#  'prim' => 'prival3',
+#  'local' => 'locval',
+#  'other' => 'value3'
+#}
+#d = StorePutGet::DynamoDb.new('test', 'local', { endpoint: addr })
+#d.put(item)
+#r = d.get(item['local'])
+#assert(r['local'], item['local'], 'Got correct by local')
+#d.delete(item['local'])
+#r = d.get(item['local'])
+#assert(r.nil?, true, 'Deleted item query returns nil')
 
 exit $unit_test

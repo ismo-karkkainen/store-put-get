@@ -1,16 +1,14 @@
 #!/bin/sh
 
-P="./test-*.sh"
-if [ $# -ne 0 ]; then
-    P="./test-$1-*.sh"
-fi
+P="./test-$1-*.sh"
+shift
 
 RV=0
 cd test
 for S in $P
 do
-    echo $S
-    $S
+    echo $S "$@"
+    $S "$@"
     B=$(basename $S .sh)
     if [ ! -f $B.good ]; then
         echo "No $B.good to compare with."

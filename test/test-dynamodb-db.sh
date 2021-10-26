@@ -11,7 +11,7 @@ out() {
 }
 
 echo "####COMMAND DynamoDB tests."
-./dbtest-dynamodb > x1 2> x2
+./dbtest-dynamodb $1 > x1 2> x2
 out $?
 
 ) > $(basename $0 .sh).res

@@ -1,0 +1,10 @@
+####COMMAND DynamoDB tests.
+####CODE 0
+####OUT
+ok: Primary: Table name ok
+ok: Primary: Field name ok
+ok: Primary: Got correct by primary
+ok: Primary: Deleted item query returns nil
+ok: Secondary: Got correct by secondary
+ok: Secondary: Deleted item query returns nil
+####ERR

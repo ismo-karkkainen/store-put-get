@@ -26,6 +26,21 @@ task :storeputget do
 end
 
 desc 'Test DynamoDB'
-task :dynamodb do
-  #sh './runtest.sh dynamodb'
+task dynamodb: %i[start_dynamodb test_dynamodb_internal stop_dynamodb]
+
+$dbaddress = nil
+
+desc 'Start local DynamoDB'
+task :start_dynamodb do
+  $dbaddress = `./dynamodb.sh 1`
+end
+
+desc 'Run DynamoDB test using running instance'
+task test_dynamodb_internal: %i[start_dynamodb] do
+  sh "./runtest.sh dynamodb #{$dbaddress}"
+end
+
+desc 'Stop local DynamoDB'
+task :stop_dynamodb do
+  sh './dynamodb.sh 0'
 end
