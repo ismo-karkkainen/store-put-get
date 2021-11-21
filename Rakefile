@@ -17,12 +17,20 @@ task install: [:gem] do
   `gem install *.gem`
 end
 
+desc 'Test on fresh environment, installs required packages.'
+task freshtest: %i[requirements test]
+
+desc 'Install required packages.'
+task :requirements do
+  `gem install aws-sdk-dynamodb`
+end
+
 desc 'Test.'
 task test: %i[storeputget dynamodb]
 
 desc 'Test StorePutGet class'
 task :storeputget do
-  sh './runtest.sh storeputgetbase'
+  sh './run-test-set.sh storeputgetbase'
 end
 
 desc 'Test DynamoDB'
@@ -32,15 +40,15 @@ $dbaddress = nil
 
 desc 'Start local DynamoDB'
 task :start_dynamodb do
-  $dbaddress = `./dynamodb.sh 1`
+  $dbaddress = `./dynamodb.sh up`
 end
 
 desc 'Run DynamoDB test using running instance'
 task test_dynamodb_internal: %i[start_dynamodb] do
-  sh "./runtest.sh dynamodb #{$dbaddress}"
+  sh "./run-test-set.sh dynamodb #{$dbaddress}"
 end
 
 desc 'Stop local DynamoDB'
 task :stop_dynamodb do
-  sh './dynamodb.sh 0'
+  sh './dynamodb.sh down'
 end

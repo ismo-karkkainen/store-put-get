@@ -1,0 +1,30 @@
+substitutions:
+  _DYNAMODB_ENDPOINT: "http://dynamodb:8000"
+  _REGION: "europe-north1"
+steps:
+# Ruby 2.7
+- name: "${_REGION}-docker.pkg.dev/$PROJECT_ID/docker-compose/latest"
+  args: [ "up", "-d" ]
+  env:
+  - "PROJECT_ID=$PROJECT_ID"
+- name: "${_REGION}-docker.pkg.dev/$PROJECT_ID/awscli/latest"
+  entrypoint: "/bin/sh"
+  args: [ "./dbsetup.sh", "${_DYNAMODB_ENDPOINT}" ]
+  env:
+  - "AWS_DEFAULT_REGION=eu-north-1"
+  - "AWS_ACCESS_KEY_ID=anyFakeValueWillDo"
+  - "AWS_SECRET_ACCESS_KEY=anyFakeValueWillDo"
+- name: "ruby:2.7-bullseye"
+  entrypoint: "/bin/sh"
+  args: [ "./run-all.sh", "store-put-get:ruby27:debian11.txt" ]
+  env:
+  - "DYNAMODB=${_DYNAMODB_ENDPOINT}"
+  - "AWS_REGION=eu-north-1"
+  - "AWS_ACCESS_KEY_ID=anyFakeValueWillDo"
+  - "AWS_SECRET_ACCESS_KEY=anyFakeValueWillDo"
+- name: "${_REGION}-docker.pkg.dev/$PROJECT_ID/docker-compose/latest"
+  args: [ "down" ]
+  env:
+  - "PROJECT_ID=$PROJECT_ID"
+- name: "bash"
+  args: [ "-c", "cat store-put-get:ruby27:debian11.txt" ]

@@ -1,0 +1,10 @@
+version: "2"
+services:
+  dynamodb:
+    image: "europe-north1-docker.pkg.dev/$PROJECT_ID/aws-dynamodb-local/latest"
+    ports:
+    - "8000:8000"
+networks:
+  default:
+    external:
+      name: cloudbuild

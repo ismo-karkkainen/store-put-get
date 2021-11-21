@@ -19,6 +19,12 @@ do
         echo "Comparison ok."
     else
         RV=1
+        echo "Good:"
+        cat $B.good
+        echo "Result:"
+        cat $B.res
+        echo "Diff:"
+        diff $B.good $B.res
     fi
 done
 exit $RV

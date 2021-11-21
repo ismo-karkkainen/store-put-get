@@ -1,17 +1,22 @@
 #!/bin/sh
 
 if [ $# -ne 1 ]; then
-    echo "Usage: $(basename $0) 0|1"
-    echo "  Use 1 to start the DynamoDB container, 0 to stop it."
+    echo "Usage: $(basename $0) up|down"
+    echo "  Use up to start the DynamoDB container, down to stop it."
     exit 1
+fi
+
+if [ -n "$DYNAMODB" ]; then
+    test "$1" = "up" && echo $DYNAMODB
+    exit 0
 fi
 
 A="invalid"
 case "$1" in
-    0)
+    down)
         A="stop"
         ;;
-    1)
+    up)
         A="start"
         ;;
 esac
@@ -43,11 +48,10 @@ fi
 set -e
 aws --help >/dev/null
 docker --help > /dev/null
+if [ "$P" = "macos" ]; then
+    docker-machine --help > /dev/null
+fi
 set +e
-
-function setupdb {
-    aws dynamodb create-table --table-name test --attribute-definitions '[{"AttributeName":"prim","AttributeType":"S"},{"AttributeName":"sec","AttributeType":"S"}]' --key-schema '{"AttributeName":"prim","KeyType":"HASH"}' --global-secondary-indexes 'IndexName=idx,KeySchema=[{AttributeName=sec,KeyType=HASH}],Projection={ProjectionType=KEYS_ONLY}' --billing-mode PAY_PER_REQUEST --endpoint-url $1 >/dev/null 2>&1
-}
 
 function run {
     ID=$(docker ps --filter name=storeputget --format '{{.ID}}')
@@ -65,7 +69,7 @@ function macos_start {
     docker pull amazon/dynamodb-local >/dev/null 2>&1
     run
     E="http://$(echo $DOCKER_HOST | sed -e 's#^tcp://##' -e 's#:[0-9]*$##'):8000"
-    setupdb $E
+    ./dbsetup.sh $E
     set +e
     echo $E
 }
@@ -80,7 +84,7 @@ function linux_start {
     docker pull amazon/dynamodb-local >/dev/null 2>&1
     run
     E="http://127.0.0.1:8000"
-    setupdb $E
+    ./dbsetup.sh $E
     set +e
     echo $E
 }
